@@ -64,6 +64,12 @@ private
           return true
         end
 
+        FileUtils.mkdir_p('public')
+        cache_load "public/assets"
+
+        ENV["RAILS_GROUPS"] ||= "assets"
+        ENV["RAILS_ENV"]    ||= "production"
+
         precompile = rake.task("assets:precompile")
         return true unless precompile.is_defined?
 
@@ -74,6 +80,23 @@ private
         if precompile.success?
           log "assets_precompile", :status => "success"
           puts "Asset precompilation completed (#{"%.2f" % precompile.time}s)"
+
+          # If 'turbo-sprockets-rails3' gem is available, run 'assets:clean_expired' and
+          # cache assets if task was successful.
+          if gem_is_bundled?('turbo-sprockets-rails3')
+            log("assets_clean_expired") do
+              run("env PATH=$PATH:bin bundle exec rake assets:clean_expired 2>&1")
+              if $?.success?
+                log "assets_clean_expired", :status => "success"
+                cache_store "public/assets"
+              else
+                log "assets_clean_expired", :status => "failure"
+                cache_clear "public/assets"
+              end
+            end
+          else
+            cache_clear "public/assets"
+          end
         else
           precompile_fail(precompile.output)
         end
