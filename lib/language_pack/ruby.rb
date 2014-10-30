@@ -714,8 +714,8 @@ params = CGI.parse(uri.query || "")
   end
 
   def run_compile_tasks
-    tasks = user_env_hash['COMPILE_TASKS']
-    if tasks =~ /\S/
+    tasks = env('COMPILE_TASKS')
+    unless tasks.empty?
       compile = rake.task(tasks)
       topic "Running custom compile tasks"
       compile.invoke(env: rake_env)
