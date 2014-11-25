@@ -503,7 +503,7 @@ WARNING
           cache.load ".bundle"
         end
 
-        topic("Installing dependencies using #{bundler.version} #{rake_env}")
+        topic("Installing dependencies using #{bundler.version}")
         load_bundler_cache
 
         bundler_output = ""
