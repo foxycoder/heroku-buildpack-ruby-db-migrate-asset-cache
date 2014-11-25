@@ -503,7 +503,7 @@ WARNING
           cache.load ".bundle"
         end
 
-        topic("Installing dependencies using #{bundler.version}")
+        topic("Installing dependencies using #{bundler.version} #{rake_env}")
         load_bundler_cache
 
         bundler_output = ""
@@ -600,7 +600,6 @@ ERROR
   def create_database_yml
     instrument 'ruby.create_database_yml' do
       log("create_database_yml") do
-        topic("Writing config/database.yml to read from DATABASE_URL")
         return unless File.directory?("config")
         topic("Writing config/database.yml to read from DATABASE_URL")
         File.open("config/database.yml", "w") do |file|
