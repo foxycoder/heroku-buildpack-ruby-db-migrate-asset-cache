@@ -532,7 +532,6 @@ WARNING
           puts "Running: #{bundle_command}"
           instrument "ruby.bundle_install" do
             bundle_time = Benchmark.realtime do
-              bundler_output << pipe("apt-get update && apt-get install cmake -y", out: "2>&1", env: env_vars, user_env: true)
               bundler_output << pipe("#{bundle_command} --no-clean", out: "2>&1", env: env_vars, user_env: true)
             end
           end
